@@ -1,0 +1,25 @@
+{
+  "name": "auto_dakoku",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aiirononeko/auto_dakoku_js.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aiirononeko/auto_dakoku_js/issues"
+  },
+  "homepage": "https://github.com/aiirononeko/auto_dakoku_js#readme",
+  "dependencies": {
+    "async": "^3.2.0",
+    "aws-sdk": "^2.635.0",
+    "aws-xray-sdk": "^2.5.0",
+    "xlsx-populate": "^1.21.0"
+  }
+}
