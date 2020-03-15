@@ -39,24 +39,20 @@ function getFormattedWorkTime(startTime, endTime, rest) {
 function getFormattedOverTime(startTime, endTime) {
   return 0.0;
 }
- 
+
+// Lambdaハンドラ
 exports.handler = (event, context, callback) => {
 
-  // 出勤か退勤かを取得
-  const isComming = event.key; // event.key = true or false(出勤 or 退勤)
-  
-  async function opelationExcelFile() {
+  const isComming = true;
 
-    // エクセルファイル読み込み
-    XlsxPopulate.fromFileAsync('勤怠請負用(2020)_片田.xlsm')
-      .then(workbook => {
+  XlsxPopulate.fromFileAsync('勤怠請負用(2020)_片田.xlsm')
+    .then((workbook) => {
 
-        console.log('Start Programming');
+      console.log('処理を開始しました');
 
-        // 現在時刻.getMonth()の値によりシートを切り替える
-        let sheetNumber;
-        switch(date.getMonth() + 1) {
-          case 1: // 1月
+      let sheetNumber;
+      switch(date.getMonth() + 1) {
+        case 1: // 1月
             sheetNumber = '01';
             break;
           case 2: // 2月
@@ -92,50 +88,38 @@ exports.handler = (event, context, callback) => {
           case 12: // 12月
             sheetNumber = '12';
             break;
-        };
-
-        const sheetName = workbook.sheet(sheetNumber);
-        const col_number = (date.getDate() + 3).toString(); // 打刻する日付+３すると該当の行が算出される
-        
-        console.log(`sheetName : ${sheetName}`);
-        console.log(`isComming : ${isComming}`);
-
-        // セルの値を更新
-        // リクエストに含まれる情報が出勤か退勤かで処理を切り替える
-        if (isComming) {
-          const startTimeValue = sheetName.cell(`D${col_number}`).value(startTime); // 勤務開始時間
-        } else {
-          const endTimeValue = sheetName.cell(`E${col_number}`).value(endTime); // 勤務終了時間
-          const restValue = sheetName.cell(`F${col_number}`).value(rest); // 休憩時間
-          const workTimeValue = sheetName.cell(`G${col_number}`).value(workTime); // 労働時間
-          const overTimeValue = sheetName.cell(`H${col_number}`).value(overTime); // 残業時間
-        }
-
-        // ファイルを上書き保存
-        console.log('Start Excelfile uploading');
-        workbook.toFileAsync('勤怠請負用(2020)_片田.xlsm');
-        console.log('ExcelFile is saved');
-         
-    });
-  }
-      
-  opelationExcelFile().then(
-    () => {
-
-      // S3のパラメータを定義
-      const params = {
-        Bucket: "autodakoku",
-        Key: "勤怠請負用(2020)_片田.xlsm",
-        Body: fs.readFileSync("勤怠請負用(2020)_片田.xlsm")
       }
 
-      // ファイルをS3にアップロード
-      s3.putObject(params, (err, data) => {
-        if (err) { console.log(err, err.stack); }
-        console.log('Success Uploading to S3');
-        context.done();
+      console.log(`操作するシートは${sheetNumber}です`);
+
+      const sheetName = workbook.sheet(sheetNumber);
+      const colNumber = (date.getDate() + 3).toString();
+
+      if (isComming) {
+        const startTimeValue = sheetName.cell(`D${colNumber}`).value(startTime);
+      } else {
+        const endTimeValue = sheetName.cell(`E${colNumber}`).value(endTime);
+        const restValue = sheetName.cell(`F${colNumber}`).value(rest);
+        const workTimeValue = sheetName.cell(`G${colNumber}`).value(workTime);
+        const overTimeValue = sheetName.cell(`H${colNumber}`).value(overTime);
+      }
+
+      workbook.toFileAsync('/tmp/勤怠請負用(2020)_片田.xlsm').then(() => {
+
+        const params = {
+          Bucket: 'autodakoku',
+          Key: '勤怠請負用(2020)_片田.xlsm',
+          Body: fs.readFileSync('/tmp/勤怠請負用(2020)_片田.xlsm')
+        }
+  
+        s3.putObject(params, (err, data) => {
+          if (err) { console.log(err); }
+          console.log('処理が完了しました');
+          context.done()
+        })
+
       });
 
-    }
-  );
-};
+
+  });
+}
