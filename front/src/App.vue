@@ -1,12 +1,16 @@
 <template>
   <v-app>
-    <v-content>
+    <Loading v-show="loading"></Loading>
+    <v-content v-show="!loading">
       <v-app-bar
         flat
         dense
       >
       </v-app-bar>
       <v-container>
+        <v-alert type="success" v-show="alert">
+          打刻しました！
+        </v-alert>
         <v-layout wrap>
           <v-flex xs12><h1 class="title">Auto Dakoku</h1></v-flex>
           <v-flex xs12><p class="time_title">現在時刻</p></v-flex>
@@ -26,7 +30,7 @@
         </v-layout>
       </v-container>
     </v-content>
-    <v-footer>
+    <v-footer v-show="!loading">
       <v-col
         class="text-center"
         cols="12"
@@ -39,8 +43,18 @@
 
 <script>
 const axios = require('axios');
+import Loading from '@/components/Loading'
 
 export default {
+  data() {
+    return {
+      loading: false,
+      alert: false
+    }
+  },
+  components: {
+    Loading
+  },
   methods: {
     getNow() {
       const now = new Date();
@@ -49,28 +63,40 @@ export default {
       return `${hour}:${minutes}`
     },
     doDakokuStart() {
+      let self = this;
+      this.loading = true;
       axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
         body: {
           "key": true
         }
       })
       .then(function (response) {
+        self.loading = false;
+        self.alert = true;
         console.log(response);
       })
       .catch(function (error) {
+        self.loading = false;
+        self.alert = true;
         console.log(error);
       });
     },
     doDakokuEnd() {
+      let self = this;
+      this.loading = true;
       axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
         body: {
           "key": false
         }
       })
       .then(function (response) {
+        self.loading = false;
+        self.alert = true;
         console.log(response);
       })
       .catch(function (error) {
+        self.loading = false;
+        self.alert = true;
         console.log(error);
       });
     }
