@@ -43,6 +43,15 @@ function getFormattedOverTime(startTime, endTime) {
 // Lambdaハンドラ
 exports.handler = (event, context, callback) => {
 
+  const response = {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin" : "*",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+    body: JSON.stringify({ "message": "Execute async process done." })
+  };
+
   const isComming = event.key; // trueなら出勤、falseなら退勤
 
   const params = {
@@ -118,13 +127,15 @@ exports.handler = (event, context, callback) => {
     
           s3.putObject(params, (err, data) => {
             if (err) { console.log(err); }
+
             console.log('処理が完了しました');
-            context.done()
+            
+            context.done(null, response);
+
           })
 
-        });
-
-
+        })
     });
   })
+
 }
