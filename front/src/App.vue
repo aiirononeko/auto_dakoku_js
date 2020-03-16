@@ -49,8 +49,10 @@ export default {
       return `${hour}:${minutes}`
     },
     doDakokuStart() {
-      axios.post('/', {
-        key: true
+      axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
+        body: {
+          "key": true
+        }
       })
       .then(function (response) {
         console.log(response);
@@ -60,8 +62,10 @@ export default {
       });
     },
     doDakokuEnd() {
-      axios.post('/', {
-        key: false
+      axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
+        body: {
+          "key": false
+        }
       })
       .then(function (response) {
         console.log(response);
