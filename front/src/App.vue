@@ -66,9 +66,7 @@ export default {
       let self = this;
       this.loading = true;
       axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
-        body: {
-          "key": true
-        }
+        "key": true
       })
       .then(function (response) {
         self.loading = false;
@@ -85,9 +83,7 @@ export default {
       let self = this;
       this.loading = true;
       axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
-        body: {
-          "key": false
-        }
+        "key": true
       })
       .then(function (response) {
         self.loading = false;
