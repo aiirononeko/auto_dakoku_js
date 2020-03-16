@@ -83,7 +83,7 @@ export default {
       let self = this;
       this.loading = true;
       axios.post('https://ruwygafdw2.execute-api.ap-northeast-1.amazonaws.com/production/dakokuapi', {
-        "key": true
+        "key": false
       })
       .then(function (response) {
         self.loading = false;
