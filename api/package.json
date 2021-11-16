@@ -18,7 +18,7 @@
   "homepage": "https://github.com/aiirononeko/auto_dakoku_js#readme",
   "dependencies": {
     "async": "^3.2.0",
-    "aws-sdk": "^2.635.0",
+    "aws-sdk": "^2.814.0",
     "aws-xray-sdk": "^2.5.0",
     "xlsx-populate": "^1.21.0"
   }
